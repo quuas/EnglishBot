@@ -121,7 +121,7 @@ def send_question(message, question_number):
 
     bot.send_message(message.chat.id, questions[question_number], reply_markup=markup)
 
-# Функция для отправки кнопок после завершения теста
+# Функция для отправки начальных кнопок 
 def send_start_buttons(message):
     markup = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     test_button = telebot.types.KeyboardButton("Пройти тест")
@@ -146,15 +146,6 @@ def reset_user_statistics(message, user_id):
     else:
         bot.send_message(message.chat.id, "У вас пока нет статистики.")
 
-# Функция для отправки кнопок после завершения теста
-def send_end_test_buttons(message):
-    markup = telebot.types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    consultation_button = telebot.types.KeyboardButton("Записаться на консультацию")
-    school_channel_button = telebot.types.KeyboardButton("Перейти в канал школы")
-    end_test_button = telebot.types.KeyboardButton("Закончить тест")
-    markup.add(consultation_button, school_channel_button, end_test_button)
-    bot.send_message(message.chat.id, "Выберите действие:", reply_markup=markup)
-
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
 def handle_start(message):
@@ -168,25 +159,6 @@ def handle_start(message):
 
     bot.send_message(message.chat.id, "Привет! welcome в чат-бот для изучения английского языка. Здесь вы можете пройти тест на уровень владения языком, посмотреть статистику ваших результатов или воспользоваться переводчиком.",
                     reply_markup=keyboard)
-
-# Обработчик кнопки "Записаться на консультацию"
-@bot.message_handler(func=lambda message: message.text == "Записаться на консультацию")
-def handle_consultation_button(message):
-    bot.send_message(message.chat.id, "Вы можете записаться на консультацию, написав 'Хочу записаться на консультацию' в личный диалог с нами. [https://t.me/anglyskyc]")
-    send_start_buttons(message)  # Отправляем кнопки после завершения теста
-
-# Обработчик кнопки "Перейти в канал школы"
-@bot.message_handler(func=lambda message: message.text == "Перейти в канал школы")
-def handle_school_channel_button(message):
-    bot.send_message(message.chat.id, "Вы можете присоединиться к нашему каналу школы по ссылке: [https://t.me/anglyskyc]")
-    send_start_buttons(message)  # Отправляем кнопки после завершения теста
-
-# Обработчик кнопки "Закончить тест"
-@bot.message_handler(func=lambda message: message.text == "Закончить тест")
-def handle_end_test_button(message):
-    user_id = message.from_user.id
-    del user_answers[user_id]  # Очищаем данные пользователя
-    send_start_buttons(message)  # Отправляем кнопки после завершения теста
 
 # Обработчик кнопки "Пройти тест"
 @bot.message_handler(func=lambda message: message.text == "Пройти тест")
@@ -289,8 +261,8 @@ def handle_test_answers(message):
                 level = "Advanced."
                     
             user_statistics[user_id]["language_level"] = level
-            bot.send_message(message.chat.id, f"Тест пройден! Ваш приблизительный уровень - {level} Вы можете записаться на бесплатную онлайн-консультацию и получить план дальнейшего обучения.")
-            send_end_test_buttons(message)
+            bot.send_message(message.chat.id, f"Тест пройден! Ваш приблизительный уровень - {level} Вы можете посмотреть свой результат перейдя в статистику.")
+            send_start_buttons(message)
 
 # Запускаем бота
 if __name__ == "__main__":
