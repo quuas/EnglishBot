@@ -3,7 +3,7 @@ from telebot import types
 from googletrans import Translator
 from langdetect import detect
 
-TOKEN = '6916001823:AAFyboxJIY8ZzAFIjRYzwzS3quKl4Q2jGoY'
+TOKEN = 'ВАШ ТОКЕН'
 
 # Создаем экземпляр бота
 bot = telebot.TeleBot(TOKEN)
